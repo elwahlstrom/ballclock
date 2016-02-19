@@ -1,8 +1,8 @@
 package main
 
 import (
+	"./lists"
 	"fmt"
-	"lists"
 	"math"
 	"strconv"
 	"time"
