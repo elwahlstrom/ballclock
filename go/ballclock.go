@@ -3,29 +3,49 @@ package main
 import (
 	"./lists"
 	"fmt"
-	"math"
-	"strconv"
-	"time"
 )
 
 type BallClock struct {
-	NumBalls      int
-	Days          float64
-	AreBallsInSeq bool
-	_1minTrack    *lists.Stack
-	_5minTrack    *lists.Stack
-	_1hourTrack   *lists.Stack
-	_queue        *lists.Queue
+	NumBalls    int
+	Days        float64
+	InSeq       bool
+	_1minTrack  *lists.Stack
+	_5minTrack  *lists.Stack
+	_1hourTrack *lists.Stack
+	_queue      *lists.Queue
 }
 
-func NewBallClock(numBalls int) *BallClock {
+// initializes a new ball clock
+func NewBallClock(numBalls int) (*BallClock, error) {
+	if numBalls < 27 || numBalls > 127 {
+		return nil, fmt.Errorf("'%v' is not a valid number of balls, must range from 27 to 127!", numBalls)
+	}
+	
 	bc := &BallClock{numBalls, 0, false, lists.NewStack(4), lists.NewStack(11), lists.NewStack(11), lists.NewQueue(numBalls)}
 	for i := 1; i <= numBalls; i++ {
 		bc._queue.Enqueue(i)
 	}
-	return bc
+	return bc, nil
 }
 
+// run the clock until all balls are in sequence
+func (bc *BallClock) Run() {
+	for {
+		bc.Tick()
+		if bc.InSeq {
+			break
+		}
+	}
+}
+
+// cycle the ball clock N times
+func (bc *BallClock) TickN(n int) {
+	for i := 0; i < n; i++ {
+		bc.Tick()
+	}
+}
+
+// cycle the ball clock with a ball in the queue
 func (bc *BallClock) Tick() {
 	ball, ok := bc._queue.Dequeue()
 	if !ok {
@@ -47,14 +67,13 @@ func (bc *BallClock) Tick() {
 				bc._queue.Enqueue(ball)
 
 				bc.Days += .5
-				if math.Trunc(bc.Days) == bc.Days {
-					bc.AreBallsInSeq = bc.checkSeqOrder()
-				}
+				bc.InSeq = bc.checkSeqOrder()
 			}
 		}
 	}
 }
 
+// empty the balls from the track and put them back in the queue
 func (bc *BallClock) emptyTrack(track *lists.Stack) {
 	for track.Count() > 0 {
 		ball, ok := track.Pop()
@@ -64,6 +83,7 @@ func (bc *BallClock) emptyTrack(track *lists.Stack) {
 	}
 }
 
+// determine if the balls inthe queue are in sequence
 func (bc *BallClock) checkSeqOrder() bool {
 	i := 1
 	for _, ball := range bc._queue.ToArray() {
@@ -73,37 +93,4 @@ func (bc *BallClock) checkSeqOrder() bool {
 		i++
 	}
 	return true
-}
-
-func main() {
-	fmt.Println("Enter the number of clock balls one per line ranging from 27 to 127 (0 to stop):")
-	input := []string{}
-
-	line := ""
-	for line != "0" {
-		line = ""
-		fmt.Scanln(&line)
-		if line != "0" {
-			input = append(input, line)
-		}
-	}
-
-	stime := time.Now()
-	for _, bc := range input {
-		numBalls, err := strconv.Atoi(bc)
-		if err != nil || numBalls < 27 || numBalls > 127 {
-			fmt.Printf("'%v' is not a valid number of balls!\n", bc)
-			continue
-		}
-
-		clock := NewBallClock(numBalls)
-		for {
-			clock.Tick()
-			if clock.AreBallsInSeq {
-				fmt.Printf("%v balls cycle after %v days.\n", clock.NumBalls, clock.Days)
-				break
-			}
-		}
-	}
-	fmt.Printf("Total execution time: %v", time.Now().Sub(stime))
 }

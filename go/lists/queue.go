@@ -1,19 +1,19 @@
 package lists
 
 type Queue struct {
-	len, count int
+	count      int
 	head, tail int
 	list       []int
 }
 
 // initalizes a new Queue with a specific max size
 func NewQueue(size int) *Queue {
-	return &Queue{size, 0, 0, 0, make([]int, size)}
+	return &Queue{0, 0, 0, make([]int, size)}
 }
 
 // returns the Queue preallocated size
 func (q *Queue) Size() int {
-	return q.len
+	return len(q.list)
 }
 
 // returns the # of items in a the Queue
@@ -23,12 +23,12 @@ func (q *Queue) Count() int {
 
 // adds an item to the head of the Queue
 func (q *Queue) Enqueue(x int) bool {
-	if q.count == q.len {
+	if q.count == q.Size() {
 		return false
 	}
 
 	if q.count > 0 {
-		q.head = (q.head + 1) % q.len
+		q.head = (q.head + 1) % q.Size()
 	}
 
 	q.list[q.head] = x
@@ -47,7 +47,7 @@ func (q *Queue) Dequeue() (int, bool) {
 	q.count--
 
 	if q.count > 0 {
-		q.tail = (q.tail + 1) % q.len
+		q.tail = (q.tail + 1) % q.Size()
 	}
 
 	return x, true
@@ -57,7 +57,7 @@ func (q *Queue) Dequeue() (int, bool) {
 func (q *Queue) ToArray() []int {
 	a := make([]int, q.count)
 	for i := 0; i < q.count; i++ {
-		a[i] = q.list[(q.tail+i)%q.len]
+		a[i] = q.list[(q.tail+i)%q.Size()]
 	}
 	return a
 }
