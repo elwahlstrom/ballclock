@@ -28,7 +28,7 @@ func main() {
 			fmt.Println(err)
 			continue
 		}
-		
+
 		clock.Run()
 		fmt.Printf("%v balls cycle after %v days. time=%v\n", clock.NumBalls, clock.Days, time.Now().Sub(stime))
 	}

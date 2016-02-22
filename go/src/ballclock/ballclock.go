@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./lists"
 	"fmt"
+	"lists"
 )
 
 type BallClock struct {
@@ -20,7 +20,7 @@ func NewBallClock(numBalls int) (*BallClock, error) {
 	if numBalls < 27 || numBalls > 127 {
 		return nil, fmt.Errorf("'%v' is not a valid number of balls, must range from 27 to 127!", numBalls)
 	}
-	
+
 	bc := &BallClock{numBalls, 0, false, lists.NewStack(4), lists.NewStack(11), lists.NewStack(11), lists.NewQueue(numBalls)}
 	for i := 1; i <= numBalls; i++ {
 		bc._queue.Enqueue(i)
