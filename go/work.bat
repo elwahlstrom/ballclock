@@ -1,1 +1,1 @@
-start cmd.exe /K "set GOPATH=%cd% & cd src/ballclock & sh"
+start cmd.exe /k "set GOPATH=%cd% & cd src/ballclock"
