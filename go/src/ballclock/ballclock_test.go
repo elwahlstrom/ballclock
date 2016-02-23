@@ -22,7 +22,7 @@ func TestNewBallClock(t *testing.T) {
 	}
 }
 
-func Test1MinTrack(t *testing.T) {
+func Test1minTrack(t *testing.T) {
 	bc, err := NewBallClock(27)
 	if err != nil {
 		t.Errorf("NewBallClock(27) failed, reason: %v", err)
@@ -44,12 +44,11 @@ func Test5minTrack(t *testing.T) {
 
 	bc.TickN(5)
 
-	a := []int{}
-	if !reflect.DeepEqual(bc._1minTrack.ToArray(), a) {
-		t.Errorf("Clock 1 minute track %v does not match %v", bc._1minTrack.ToArray(), a)
+	if bc._1minTrack.Count() > 0 {
+		t.Errorf("Clock 1 minute track %v should be empty", bc._1minTrack.ToArray())
 	}
 
-	a = []int{5}
+	a := []int{5}
 	if !reflect.DeepEqual(bc._5minTrack.ToArray(), a) {
 		t.Errorf("Clock 5 minute track %v does not match %v", bc._5minTrack.ToArray(), a)
 	}
@@ -63,17 +62,16 @@ func Test1hourTrack(t *testing.T) {
 
 	bc.TickN(12 * 5)
 
-	a := []int{}
-	if !reflect.DeepEqual(bc._1minTrack.ToArray(), a) {
-		t.Errorf("Clock 1 minute track %v does not match %v", bc._1minTrack.ToArray(), a)
+	if bc._1minTrack.Count() > 0 {
+		t.Errorf("Clock 1 minute track %v should be empty", bc._1minTrack.ToArray())
 	}
 
-	if !reflect.DeepEqual(bc._5minTrack.ToArray(), a) {
-		t.Errorf("Clock 5 minute track %v does not match %v", bc._5minTrack.ToArray(), a)
+	if bc._5minTrack.Count() > 0 {
+		t.Errorf("Clock 5 minute track %v should be empty", bc._5minTrack.ToArray())
 	}
 
 	if bc._1hourTrack.Count() != 1 {
-		t.Errorf("Clock 1 hour track %v should contain only 1 value", bc._1hourTrack.ToArray())
+		t.Errorf("Clock 1 hour track %v should contain only 1 ball", bc._1hourTrack.ToArray())
 	}
 }
 
@@ -85,17 +83,16 @@ func Test12hourPeriod(t *testing.T) {
 
 	bc.TickN(12 * 60)
 
-	a := []int{}
-	if !reflect.DeepEqual(bc._1minTrack.ToArray(), a) {
-		t.Errorf("Clock 1 minute track %v does not match %v", bc._1minTrack.ToArray(), a)
+	if bc._1minTrack.Count() > 0 {
+		t.Errorf("Clock 1 minute track %v should be empty", bc._1minTrack.ToArray())
 	}
 
-	if !reflect.DeepEqual(bc._5minTrack.ToArray(), a) {
-		t.Errorf("Clock 5 minute track %v does not match %v", bc._5minTrack.ToArray(), a)
+	if bc._5minTrack.Count() > 0 {
+		t.Errorf("Clock 5 minute track %v should be empty", bc._5minTrack.ToArray())
 	}
 
-	if !reflect.DeepEqual(bc._1hourTrack.ToArray(), a) {
-		t.Errorf("Clock 1 hour track %v does not match %v", bc._5minTrack.ToArray(), a)
+	if bc._1hourTrack.Count() > 0 {
+		t.Errorf("Clock 1 hour track %v should be empty", bc._5minTrack.ToArray())
 	}
 
 	if bc._queue.Count() != 27 {
